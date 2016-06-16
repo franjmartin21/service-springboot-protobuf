@@ -57,25 +57,38 @@ This is just proposal as I think that we should have a naming convention for thi
 *Service classes: com.creditsesame.microservice.##NameMicroservice##.##component##
 
 **ie. com.creditsesame.microcervice.personalloan.controller
+
 **ie. com.creditsesame.microcervice.personalloan.dao
+
 **ie. com.creditsesame.microcervice.personalloan.service
+
 **ie. com.creditsesame.microcervice.personalloan.springconf -> configuration of spring
 
 ## Why the client should be provided, PROS AND CONS DISCUSSION
 
 PROS:
 - Creating the client is a way to ensure the contract
+
 - More testing ensured by the team creating the api
+
 - Backward compatibility better ensured too
+
 - It looks just natural for protocol buffers
+
 - Possibility of adding mock functionality in the client library itself that allows the cosumer to work in a offline mode
+
 - Better understanding on what the API delivers even without reading documentation
+
 - There is some extra work that could seem to be some overhead but actually taking into account that we have the compromise of coming with a good set of tests, the creation of the client should not be seen as extra work in this context but just part of the integration testing suite
+
 - Forcing devs to create clients and run tests through the clients, we enforce them to care about backward compatibitily
+
 
 CONS:
 - Would just be available for a Java consumer, if the languaje chosen is different then the client will need be implemented in their side.
+
 - Exceeding in the abstraction can lead to bad practices in programing of the consumer, as the fact that the client is calling a webservice is not that clear at first glance to the developers
+
 - As the same team creates both the server and client library there is the possibility that some of the logic could leak into the client, which is something to avoid.
 
 
