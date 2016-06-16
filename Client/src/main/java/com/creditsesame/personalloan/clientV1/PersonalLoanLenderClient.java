@@ -1,4 +1,4 @@
-package com.creditsesame.personalloan.v1;
+package com.creditsesame.personalloan.clientV1;
 
 import com.creditsesame.microservice.personalloan.protobuf.PersonalLenderProtos;
 import com.jayway.restassured.RestAssured;

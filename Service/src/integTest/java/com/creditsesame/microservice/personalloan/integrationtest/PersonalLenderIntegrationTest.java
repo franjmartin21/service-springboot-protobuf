@@ -2,7 +2,7 @@ package com.creditsesame.microservice.personalloan.integrationtest;
 
 import com.creditsesame.SkeletonServiceProjectApplication;
 import com.creditsesame.microservice.personalloan.protobuf.PersonalLenderProtos;
-import com.creditsesame.personalloan.v1.PersonalLoanLenderClient;
+import com.creditsesame.personalloan.clientV1.PersonalLoanLenderClient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
