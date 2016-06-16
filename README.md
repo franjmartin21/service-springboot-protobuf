@@ -1,7 +1,10 @@
 # MICROSERVICE WITH GRADLE, SPRING-BOOT AND PROTOCOL BUFFERS
 
 ## Quickstart
-*Clone the project: git clone <<url-clone>>
+*Install the compiler of protocol buffers, follow instructions here
+https://developers.google.com/protocol-buffers/docs/javatutorial#compiling-your-protocol-buffers
+
+*Clone the project: git clone ##git-url-project##
 
 *Build the project: ./gradlew build
 
@@ -92,17 +95,20 @@ CONS:
 - As the same team creates both the server and client library there is the possibility that some of the logic could leak into the client, which is something to avoid.
 
 
-
-## Naming convention
-
-
 ## Database connection
+
+This section is not intended to speak about configuration of db connection by environment but about configuration of InMemmory DB for integration testing vs real db for rest of environments:
+
+#### Databases configured:
+*MySQL database:
+
+
 
 
 ## Environment support
 
 
-## SQL script management
+## SQL script management-
 
 
 ## Metrics provided by spring boot
