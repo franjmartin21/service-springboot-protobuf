@@ -8,7 +8,7 @@ https://developers.google.com/protocol-buffers/docs/javatutorial#compiling-your-
 
 *Build the project: ./gradlew build
 
-*Deploy the project: ./gradlew runBoot
+*Deploy the project: ./gradlew bootRun
 
 ## Basic Structure of the project
 *service-springboot-protobuf -> Root of the project
