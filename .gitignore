@@ -1,5 +1,3 @@
-# Excluding the proto generated java
-/Client/generated-src
 .idea/
 classes
 build/
