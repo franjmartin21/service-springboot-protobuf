@@ -1,0 +1,27 @@
+package protobuf;
+
+import "Client/src/main/protos/basemessage.proto";
+
+option java_package = "com.creditsesame.microservice.personalloan.protobuf";
+option java_outer_classname = "PersonalLenderProtos";
+
+/*
+    Just an example of .proto file that contains a PersonalLender object. it includes BaseMessage, check
+    the general gradle build file to see how these proto files are compiled to make it usable by the application
+    service and client
+*/
+message PersonalLender {
+
+    required BaseMessage basemessage = 1;
+    //required string id = 1;
+    optional int32 id = 2;
+    optional string name = 3;
+    optional string link = 4;
+    optional string imageLogoUrl = 5;
+    optional string bullets = 6;
+    optional string rightSideText = 7;
+    optional string aboutText = 8;
+
+}
+
+

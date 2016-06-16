@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration monitorInterval="60">
+	<Properties>
+		<!-- Log file name -->
+		<Property name="log-file">SkeletonServiceProject.log</Property>
+	</Properties>
+
+	<Appenders>
+		<Console name="Console-Appender" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>
+					%d %-5p [%t] %c: %m%n
+				</pattern>
+			</PatternLayout>
+		</Console>
+		
+		<!-- 
+			RandomAccessFile appender use internal buffer to improve performance. Also immediateFlush is false 
+			to improve logging performance.
+			Log files are zipped after 24 hours.
+			Note: side effects of buffering logs may result on losing last 256kb data to be logged when unexpected 
+			JVM crash occurs.
+		-->		
+		<RollingRandomAccessFile name="Rolling-Random-Access-File-Appender"
+								 fileName="${log-file}" 
+								 filePattern="${log-file}-%d{yyyy-MM-dd}.gz"
+								 immediateFlush="false">
+			<PatternLayout>
+				<Pattern>%-5p %d [%t] %c: %m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
+		
+	</Appenders>
+
+	<Loggers>
+		<!--
+			Application logger 
+			Use asynchronous logging with Ramdon Access File that use internally byte buffer  
+		-->
+		<AsyncLogger name="com.creditsesame.springboot" level="info">
+	        <AppenderRef ref="Rolling-Random-Access-File-Appender"/>
+	    </AsyncLogger>
+
+		<!--
+			Root logger 
+		 -->		
+		<AsyncRoot level="info">
+			<AppenderRef ref="Console-Appender" />
+		</AsyncRoot>
+	</Loggers>
+</Configuration>

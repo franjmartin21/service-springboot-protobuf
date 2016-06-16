@@ -1,0 +1,84 @@
+/**
+ This is the gradle file that belongs to the service itself
+ */
+
+def destFolderProto = 'Protobuf/generated-src/'
+
+/**
+  Buildscript includes the spring-boot gradle plugin, this makes very easy to redeploy the project using
+ ./gradlew runBoot
+ */
+buildscript {
+    ext {
+        springBootVersion = '1.3.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+apply plugin: 'spring-boot'
+
+/**
+ All the next belongs to the java plugin
+ */
+apply plugin: 'java'
+
+/**
+ The central repository to use.
+ TO BE DONE: I guess that we will need to add also our nexus repository here when we use dependencies stored there
+ for instance when we start to run integration tests with older versions of the client
+ */
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    providedRuntime
+    // Exclude logback since we use log4j2
+    compile.exclude module: 'spring-boot-starter-logging'
+}
+
+/**
+ To find the integration tests
+ */
+sourceSets{
+    integrationTest{
+        java.srcDir file('src/integTest/java')
+        resources.srcDir file('src/integTest/resources')
+        compileClasspath = sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath = output + compileClasspath
+    }
+}
+
+/**
+ To run the integration tests
+ */
+task integrationTest(type: Test){
+    description = 'Run the integration tests.'
+    group = 'Verification'
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    // will need some reporting testResultDirs = fileTree("$buildDir/test-results/UT")
+}
+
+/**
+    List of dependencies used by the project
+ */
+dependencies {
+    // This is how it is declared a dependency on another module of the same project
+    compile project(':Client')
+
+    compile('com.h2database:h2:1.4.192')
+    compile("org.springframework:spring-jdbc:4.2.5.RELEASE")
+    compile('org.springframework.boot:spring-boot-starter-actuator:1.3.3.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-web:1.3.3.RELEASE')
+    compile('mysql:mysql-connector-java:5.1.16')
+    compile('com.googlecode.protobuf-java-format:protobuf-java-format:1.2')
+    compile('org.springframework.boot:spring-boot-starter-log4j2:1.3.5.RELEASE')
+    compile("org.flywaydb:flyway-core:4.0")
+    compile('com.lmax:disruptor:3.3.4')
+    testCompile('org.springframework.boot:spring-boot-starter-test:1.3.3.RELEASE')
+}

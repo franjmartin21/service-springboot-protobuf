@@ -1,0 +1,4 @@
+rootProject.name = 'service-springboot-protobuf'
+include 'Client'
+include 'Service'
+

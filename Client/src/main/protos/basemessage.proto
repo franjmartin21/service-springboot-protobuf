@@ -1,0 +1,15 @@
+package protobuf;
+
+option java_package = "com.creditsesame.microservice.personalloan.protobuf";
+option java_outer_classname = "BaseMessageProtos";
+
+/**
+    BaseMessage is just supposed to be included in every other message, this is just to ensure that every
+    message includes certain required or optional pieces for auditing or security purposes
+
+    This is still incomplete and it is only intented to show the capacity of protobuf of composition, check
+    personallender.proto to see how this file is used
+*/
+message BaseMessage{
+    required int32 txtid = 1;
+}

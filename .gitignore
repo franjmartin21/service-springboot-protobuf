@@ -1,0 +1,11 @@
+# Excluding the proto generated java
+/Client/generated-src
+.idea/
+classes
+build/
+.gradle
+*.log
+*.gz
+*.iml
+
+.classpath

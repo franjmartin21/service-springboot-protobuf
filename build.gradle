@@ -1,0 +1,64 @@
+/**
+ This is the general gradle file that is used to manage the build of the diferent pieces of this project, this complements
+ the other build.gradle files of each module, see comments explaining each piece
+ */
+group 'com.creditsesame.microservice.build'
+version '1.0-SNAPSHOT'
+
+/**
+    This piece here uses all the .proto files of protobuf in the source folder to generate java classes that are going to be
+    used to parse/unparse the messages
+    As you can see it relies in a commandLine call to the protoc program. This protoc program needs to be downloaded
+    and installed in your system to make this piece work
+    This task can be run in isolation ./gradlew protobuf
+ */
+def srcFolderProto = 'Client/src/main/protos/'
+def destFolderProto = 'Client/generated-src/main/java'
+//def destFolderPython = 'Client/generated-src/main/python'
+
+task protobuf{
+    println "Creating proto java classes"
+    fileTree(srcFolderProto).each{File file ->
+        exec {
+            println "Processing the command 'protoc --java_out=" + destFolderProto + " " + srcFolderProto + file.getName() + "'"
+            commandLine 'protoc', '--java_out=' + destFolderProto, srcFolderProto + file.getName()
+        }
+    }
+}
+
+/**
+   Java plugin to support the needs of java applications, compilation, build, packaging...
+ */
+apply plugin: 'java'
+/**
+    Clean phase should also wipe out the folder of the generated java classes from the .proto files
+ */
+clean {
+    delete destFolderProto + '/com'
+}
+
+/**
+    Compile phase relies on previouly generating the proto java classes
+ */
+compileJava.dependsOn protobuf
+
+repositories {
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        //classpath("ru.trylogic.gradle.plugins:gradle-thrift-plugin:0.1.1")
+    }
+}
+
+sourceCompatibility = 1.5
+
+dependencies {
+    //compile "org.springframework.boot:spring-boot-starter-web"
+    //testCompile group: 'junit', name: 'junit', version: '4.11'
+}
