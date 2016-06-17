@@ -176,18 +176,20 @@ this can be use to run any test end-to-end or even to develop the service withou
 */mappings -> Displays a collated list of all @RequestMapping paths.
 
 
-## Evolving API, model proposed
-
-
-
-
 ## Unit Tests
+It has been added junit and mockito for unit testing.
+
+It can be found an example of the usage of it in the class PersonalLenderTest
+
+It needs to be defined the tests that need to be created as we need to achieve a high coverage in the project
 
 
 ## Integration Tests
+For integration testing, it is being used junit + Spring-boot. Next things need to be taken into account in the integration-test suite
 
+*It is being used the client library to run the calls to the endpoints of the service, so the same client that is going to be used by the consumers is tested too
 
-## Integration Tests and Backward compatibility
+*This should cover tests with the old client libraries so we ensure backward compatibility and have a better confindence that a new release don't break the integration of any consumer
 
+*An example documented of an integration tests can be found in the class PersonalLenderIntegrationTest
 
-## PENDING SUPPORT: Artifact naming convention
