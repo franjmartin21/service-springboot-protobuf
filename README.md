@@ -10,6 +10,7 @@ https://developers.google.com/protocol-buffers/docs/javatutorial#compiling-your-
 
 *Deploy the project: ./gradlew bootRun
 
+
 ## Basic Structure of the project
 *service-springboot-protobuf -> Root of the project
 
@@ -42,7 +43,6 @@ https://developers.google.com/protocol-buffers/docs/javatutorial#compiling-your-
 **Service /src/integTest -> Integration test for the service
 
 
-
 ## Package naming convention used
 
 #### Client microservice modules
@@ -66,6 +66,24 @@ This is just proposal as I think that we should have a naming convention for thi
 **ie. com.creditsesame.microcervice.personalloan.service
 
 **ie. com.creditsesame.microcervice.personalloan.springconf -> configuration of spring
+
+
+## Artifacts delivered by the project
+
+Two artifacts are delivered by the project:
+
+*client.jar -> This is going to be used as a library in other projects to make it easy to consume the service
+
+*service.jar -> this is the service itself, it also uses as a dependency the client.jar library as it contains the classes to parse/unparse and also uses the libraries to perform the integration tests
+
+New naming convention should be provided when we start to develop the services like:
+
+*##nameofservice##-service-##version##.jar
+
+*##nameofservice##-client-##version##.jar
+
+ie. personalloan-service-16.06.r0.2.jar / personalloan-client-16.06.r0.2.jar
+
 
 ## Why the client should be provided, PROS AND CONS DISCUSSION
 
@@ -100,21 +118,67 @@ CONS:
 This section is not intended to speak about configuration of db connection by environment but about configuration of InMemmory DB for integration testing vs real db for rest of environments:
 
 #### Databases configured:
-*MySQL database:
+*MySQL database: Drivers and Connections are configured to use a mysql db, only thing that needs to be configured to use it is the file application.properties and modify the value 'persistenceTarget' to localmysql. This will make the persistence layer to read the persistence-localmysql.properties file
 
-
+*H2: Drivers and Connections are also configured for h2 db. only thing that needs to be configured to use it is the file application.properties and modify the value 'persistenceTarget' to h2.
 
 
 ## Environment support
 
+Spring-boot comes with support for multiple environments. The configuration file for Spring is the application.properties, it can be provided different configuration files using the following convention:
 
-## SQL script management-
+*application.properties
 
+*application-local.properties
+
+*application-preprod.properties
+
+*application-production.properties
+
+Then in order to run the project with different profiles, it has to be added the parameter: -Dspring.profiles.active=production
+
+
+## SQL script management
+
+We use flyway for the script management, flyway is able to run the scripts on startup, so when using mysql it will find by number the last script run and is going to run the subsequent scripts available.
+
+#### Scripts Naming convention
+In order to let flyway to its work good in the incremental sql changes and have clear understanding of what each sql script do. I use here the naming convention:
+
+*V##timeinseconds##__##descsqlchange##.sql
+
+*ie. V1461100728__PersonalLender_table.sql
+
+#### Flyway in H2 database
+
+H2db + Flyway is a good combination, when the server is run with h2 db, it is created a brand new instance of the database and flyway run all the scripts of the project secuentialy
+this can be use to run any test end-to-end or even to develop the service without installing Mysql
 
 ## Metrics provided by spring boot
+*/configprops -> Shows the configuration properties of the service
+
+*/dump -> Shows the thread dump
+
+*/info -> Shows any information about the application placed in the file application.properties, we should use this file to place things like the project name, the description and the version
+
+*/beans -> Shows the beans configured, specially helpful to know what spring boot configured automatically
+
+*/autoconfig -> Displays an auto-configuration report showing all auto-configuration candidates and the reason why they ‘were’ or ‘were not’ applied. Very helpful too, to understand the configuration applied by spring-boot.
+
+*/metrics -> Shows metrics information of the current application. gc, threads, memory metrics can be found there.
+
+*/health -> Shows application health information (when the application is secure, a simple ‘status’ when accessed over an unauthenticated connection or full message details when authenticated).
+
+*/trace -> Displays trace information (by default the last few HTTP requests).
+
+*/env -> Exposes properties from Spring’s ConfigurableEnvironment.
+
+*/mappings -> Displays a collated list of all @RequestMapping paths.
 
 
 ## Evolving API, model proposed
+
+
 
 
 ## Unit Tests
@@ -124,8 +188,6 @@ This section is not intended to speak about configuration of db connection by en
 
 
 ## Integration Tests and Backward compatibility
-
-
 
 
 ## PENDING SUPPORT: Artifact naming convention
