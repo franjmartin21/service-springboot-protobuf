@@ -1,6 +1,8 @@
 package com.creditsesame.microservice.personalloan.integrationtest;
 
 import com.creditsesame.SkeletonServiceProjectApplication;
+import com.creditsesame.microservice.personalloan.domain.PersonalLender;
+import com.creditsesame.microservice.personalloan.protobuf.BaseMessageProtos;
 import com.creditsesame.microservice.personalloan.protobuf.PersonalLenderProtos;
 import com.creditsesame.personalloan.clientV1.PersonalLoanLenderClient;
 import org.junit.Assert;
@@ -56,8 +58,32 @@ public class PersonalLenderIntegrationTest {
         Obviously this test should do much more assertions on the message recieved
      */
     @Test
-    public void testPersonalLenderIntegration() throws Exception{
-        PersonalLenderProtos.PersonalLender PersonalLenderResponse =  personalLoanLenderClient.callForPersonalLenderById(1L);
-        Assert.assertEquals("AVANT_CREDIT", PersonalLenderResponse.getName());
+    public void testPersonalLenderIntegration() throws Exception {
+        PersonalLenderProtos.PersonalLender personalLenderResponse =  personalLoanLenderClient.callForPersonalLenderById(1L);
+        Assert.assertEquals("AVANT_CREDIT", personalLenderResponse.getName());
     }
+
+    @Test
+    public void testUpdatePersonalLenderIntegration() throws Exception {
+        //PersonalLenderProtos.PersonalLender personalLenderResponse = personalLoanLenderClient.updateOrInsertPersonalLender(createPersonalLender());
+        personalLoanLenderClient.updateOrInsertPersonalLender(createPersonalLender());
+        //Assert.assertNotNull(personalLenderResponse);
+        //Assert.assertTrue(personalLenderResponse.getId() > 0);
+    }
+
+    private PersonalLenderProtos.PersonalLender createPersonalLender() {
+        BaseMessageProtos.BaseMessage baseMessage = BaseMessageProtos.BaseMessage.newBuilder()
+                .setTxtid(34532452)
+                .build();
+        PersonalLenderProtos.PersonalLender PersonalLender = PersonalLenderProtos.PersonalLender.newBuilder()
+                .setBasemessage(baseMessage)
+                .setName("NUEVO LENDER")
+                .setImageLogoUrl("http://asdfasdf.com")
+                .setLink("http://adsfasdfads.com")
+                .setRightSideText("RightSideText")
+                .setAboutText("About text, About text")
+                .build();
+        return PersonalLender ;
+    }
+
 }

@@ -5,7 +5,7 @@ package com.creditsesame.microservice.personalloan.domain;
     another class, but did it without this for now to keep it simple
  */
 public class PersonalLender {
-    private int id;
+    private long id;
 
     private String name;
 
@@ -19,11 +19,11 @@ public class PersonalLender {
 
     private String aboutText;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

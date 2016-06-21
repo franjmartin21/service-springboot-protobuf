@@ -20,4 +20,20 @@ public class PersonalLenderService {
     public PersonalLender getCustomerById(long id){
         return personalLenderDao.getById(id);
     }
+
+    public void saveCustomer(Long id, PersonalLender personalLender){
+        PersonalLender personalLender1 = getCustomerById(id);
+        personalLender.setId(id);
+        if(personalLender1 == null)
+            personalLenderDao.insertRecord(personalLender);
+    }
+
+    public PersonalLender insertCustomer(PersonalLender personalLender){
+        if(personalLender == null) return null;
+
+        Long newLender = personalLenderDao.insertRecord(personalLender);
+        return getCustomerById(newLender);
+    }
+
+
 }

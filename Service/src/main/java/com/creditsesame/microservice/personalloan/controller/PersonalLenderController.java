@@ -8,9 +8,7 @@ import com.creditsesame.microservice.personalloan.service.PersonalLenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
     Tipical Spring-MVC controller, RestController just means that the response is going to be @ResponseBody
@@ -34,21 +32,53 @@ public class PersonalLenderController {
     @Autowired
     private PersonalLenderService personalLenderService;
 
-    @RequestMapping("/personallender/{id}")
-    PersonalLenderProtos.PersonalLender customer(@PathVariable Integer id) {
+    /**
+        This method is still missing the txtId that should be passed in the body or in the header, this needs to be decided
+        once we get this txtId the same txtId should be used for the response instead of a new value
+     */
+    @RequestMapping(value = "/personallender/{id}", method = RequestMethod.GET)
+    public PersonalLenderProtos.PersonalLender customer(@PathVariable Integer id) {
         log.info("Fetching customer with id={}", id);
-        return personalLender(id);
+        return convertPersonalLenderToProto(1234, personalLenderService.getCustomerById(id));
     }
 
-    private PersonalLenderProtos.PersonalLender personalLender(Integer id) {
-        PersonalLender personalLender = personalLenderService.getCustomerById(id);
+
+    @RequestMapping(value = "/personallender/", method = RequestMethod.POST)
+    public PersonalLenderProtos.PersonalLender storeLender(@RequestBody PersonalLenderProtos.PersonalLender personalLenderProto){
+        log.info("Updating customer with name={}", personalLenderProto.getName());
+        PersonalLender personalLender = personalLenderService.insertCustomer(convertProtoToPersonalLoan(personalLenderProto));
+        return convertPersonalLenderToProto(personalLenderProto.getBasemessage().getTxtid(), personalLender);
+    }
+
+    /**
+        In order to convert back and forth from domain objects to protocol buffer representation we will need converters like this one
+        that could be implemented better in other 'helper' classes
+     */
+    private PersonalLenderProtos.PersonalLender convertPersonalLenderToProto(int txtId, PersonalLender personallender) {
         BaseMessageProtos.BaseMessage baseMessage = BaseMessageProtos.BaseMessage.newBuilder()
-                .setTxtid(34532452)
+                .setTxtid(txtId)
                 .build();
-        PersonalLenderProtos.PersonalLender PersonalLender = PersonalLenderProtos.PersonalLender.newBuilder()
-                .setBasemessage(baseMessage)
-                .setName(personalLender.getName())
-                .build();
-        return PersonalLender ;
+        PersonalLenderProtos.PersonalLender.Builder personalLenderProtosBuilder = PersonalLenderProtos.PersonalLender.newBuilder();
+        /**
+            Unfortunatelly right now protocol buffers force us to do this as setting a null value will throw a nullPointerException
+         */
+        personalLenderProtosBuilder.setBasemessage(baseMessage);
+        personalLenderProtosBuilder.setId(personallender.getId());
+        if(personallender.getName() != null) personalLenderProtosBuilder.setName(personallender.getName());
+        if(personallender.getAboutText() != null) personalLenderProtosBuilder.setAboutText(personallender.getAboutText());
+        if(personallender.getImageLogoUrl() != null) personalLenderProtosBuilder.setImageLogoUrl(personallender.getImageLogoUrl());
+        if(personallender.getLink() != null) personalLenderProtosBuilder.setLink(personallender.getLink());
+
+        return personalLenderProtosBuilder.build();
+    }
+
+    private PersonalLender convertProtoToPersonalLoan(PersonalLenderProtos.PersonalLender personalLenderProto){
+        PersonalLender personalLender = new PersonalLender();
+        personalLender.setName(personalLenderProto.getName());
+        personalLender.setBullets(personalLenderProto.getBullets());
+        personalLender.setImageLogoUrl(personalLenderProto.getImageLogoUrl());
+        personalLender.setRightSideText(personalLenderProto.getRightSideText());
+        personalLender.setLink(personalLenderProto.getLink());
+        return personalLender;
     }
 }

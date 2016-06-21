@@ -44,7 +44,9 @@ public class PersonalLoanLenderClient {
     private int urlPort = 8080;
 
     /**
-        As explained before
+        This method shows how to make a GET call from the client, this is still missing some support, for instance the
+        transaction id should probably be send either in the body or in the header of the http message
+        Also a better support of Exceptions is missing and some checking of the http code returned
      */
     public PersonalLenderProtos.PersonalLender callForPersonalLenderById(long id) throws IOException{
         /**
@@ -54,6 +56,17 @@ public class PersonalLoanLenderClient {
          */
         String resource = urlService + ":" + urlPort + "/personallender/" + id;
         final Response response = RestAssured.get(resource);
+        return PersonalLenderProtos.PersonalLender.parseFrom(response.getBody().asInputStream());
+    }
+
+    /**
+        This method shows how to store a new lender using protobuf. This method would still need to be completed with the
+        same pieces described in the method above
+     */
+    public PersonalLenderProtos.PersonalLender updateOrInsertPersonalLender(PersonalLenderProtos.PersonalLender personalLender) throws IOException{
+        String resource = urlService + ":" + urlPort + "/personallender/";
+        byte[] byteArray = personalLender.toByteArray();
+        final Response response = RestAssured.given().contentType("application/x-protobuf").body(byteArray).post(resource);
         return PersonalLenderProtos.PersonalLender.parseFrom(response.getBody().asInputStream());
     }
 
